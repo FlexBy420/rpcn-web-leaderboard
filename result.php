@@ -198,7 +198,7 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                             <tr>
                                 <td><?php echo $idx + 1; ?>.</td>
                                 <td><strong><?php echo htmlspecialchars($row["user"]); ?></strong></td>
-                                <td class="score-val"><?php echo htmlspecialchars($row["val"]); ?></td>
+                                <td class="score-val"><?php echo $row["val"]; ?></td>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

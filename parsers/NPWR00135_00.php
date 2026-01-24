@@ -1,9 +1,9 @@
 <?php
 return [
-    'title' => 'Snakeline',
-    'config' => [
+    "title" => "Snakeline",
+    "config" => [
         "game_id" => ["NPHA80027"],
-        'names' => [
+        "names" => [
             32 => "Ball Frenzy - Ball Mania (Level 1)",
             33 => "Ball Frenzy - Stir Crazy (Level 2)",
             34 => "Ball Frenzy - Ball Karma (Level 3)",
@@ -15,9 +15,9 @@ return [
             40 => "Ball Frenzy - Rush Hour (Level 9)",
             41 => "Ball Frenzy - Beam Me Up (Level 10)",
         ],
-        'time_boards' => []
+        "time_boards" => []
     ],
-    'formatter' => function($score, $boardId, $config, $info) {
+    "formatter" => function($score, $boardId, $config, $info) {
         $score = (float)$score;
         $points = floor($score / 1099511627776);
         $timePart = fmod($score, 1099511627776);
@@ -32,3 +32,4 @@ return [
         return sprintf("%d — %d:%02d:%02d:%02d", $points, $h, $m, $s, $cc);
     }
 ];
+?>

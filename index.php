@@ -60,7 +60,7 @@ usort($games, function($a, $b) {
         .game-link:hover { background: #1f2833; color: #66fcf1; }
         .game-title { font-weight: 500; font-size: 1.05rem; }
         .rpcn-list-regions { display: flex; gap: 8px; align-items: center; }
-        .rpcn-list-flags img { height: 14px;width: auto;display: block;border-radius: 2px;box-shadow: 0 0 5px rgba(0,0,0,0.5);}
+        .rpcn-list-flags img { height: 32px;width: auto;display: block;border-radius: 2px;box-shadow: 0 0 5px rgba(0,0,0,0.5);}
     </style>
 </head>
 <body>
