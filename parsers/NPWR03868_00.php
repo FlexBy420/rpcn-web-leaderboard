@@ -6,7 +6,7 @@ return [
         "game_id" => "NPEB01164",
         "score_boards" => [0],
         "names" => [
-            0 => "Wins"
+            0 => "Battle Points"
         ]
     ],
     "formatter" => function($score, $boardId, $config) {
