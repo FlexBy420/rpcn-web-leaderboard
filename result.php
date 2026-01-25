@@ -175,15 +175,33 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
 
         <?php if (is_array($parser)): ?>
             <?php if ($boardId === null): ?>
-                <ul class="list">
-                    <?php foreach ($names as $id => $name): ?>
-                        <li class="list-item">
-                            <a href="?comm_id=<?php echo urlencode($commIdStr); ?>&board_id=<?php echo urlencode((string)$id); ?>" class="list-link">
+                <?php 
+                $groups = [];
+                foreach ($names as $id => $fullName) {
+                    if (strpos($fullName, '|') !== false) {
+                        list($group, $level) = explode('|', $fullName);
+                        $groups[$group][$id] = $level;
+                    } else {
+                        $groups['General'][$id] = $fullName;
+                    }
+                }
+                ?>
+            
+                <?php foreach ($groups as $groupName => $boards): ?>
+                    <h3 style="color: #66fcf1; margin-top: 30px; border-bottom: 1px solid #45a29e; padding-bottom: 5px;">
+                        <?php echo htmlspecialchars($groupName); ?>
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px;">
+                        <?php foreach ($boards as $id => $name): ?>
+                            <a href="?comm_id=<?php echo urlencode($commIdStr); ?>&board_id=<?php echo $id; ?>" 
+                               style="display: block; padding: 10px; background: #1f2833; color: #c5c6c7; text-decoration: none; border-radius: 4px; text-align: center; transition: 0.3s;"
+                               onmouseover="this.style.background='#45a29e'; this.style.color='#0b0c10';"
+                               onmouseout="this.style.background='#1f2833'; this.style.color='#c5c6c7';">
                                 <?php echo htmlspecialchars($name); ?>
                             </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endforeach; ?>
             <?php else: ?>
                 <h2 style="color: #45a29e; margin-bottom: 10px;"><?php echo htmlspecialchars($names[$boardId] ?? "Scoreboard"); ?></h2>
                 <?php if (empty($displayRows) && $errorMessage === null): ?>
@@ -191,7 +209,18 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                 <?php else: ?>
                     <table>
                         <thead>
-                            <tr><th style="width: 60px;">Rank</th><th>Player</th><th><?php echo $isTimeBoard ? "Time" : "Score"; ?></th></tr>
+                            <tr>
+                                <th style="width: 60px;">Rank</th><th>Player</th>
+                                <th>
+                                    <?php 
+                                    if (isset($pConfig['column_names'][$boardId])) {
+                                        echo htmlspecialchars($pConfig['column_names'][$boardId]);
+                                    } else {
+                                        echo $isTimeBoard ? "Time" : "Score";
+                                    }
+                                    ?>
+                                </th>
+                            </tr>
                         </thead>
                         <tbody>
                             <?php foreach ($displayRows as $idx => $row): ?>

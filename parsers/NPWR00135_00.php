@@ -1,21 +1,31 @@
 <?php
+$names = [];
+$ballFrenzyLevels = [
+    32 => "Ball Mania",
+    33 => "Stir Crazy",
+    34 => "Ball Karma",
+    35 => "Twisted Star",
+    36 => "Tic Tac Toe",
+    37 => "Crazy Island",
+    38 => "Sunshine",
+    39 => "Gridlock",
+    40 => "Rush Hour",
+    41 => "Beam Me Up",
+];
+
+foreach ($ballFrenzyLevels as $id => $levelName) {
+
+    $levelNumber = $id - 31;
+    $names[$id] = "Ball Frenzy | " . $levelName . " (Level " . $levelNumber . ")";
+}
+
 return [
     "title" => "Snakeline",
     "config" => [
         "game_id" => ["NPHA80027"],
-        "names" => [
-            32 => "Ball Frenzy - Ball Mania (Level 1)",
-            33 => "Ball Frenzy - Stir Crazy (Level 2)",
-            34 => "Ball Frenzy - Ball Karma (Level 3)",
-            35 => "Ball Frenzy - Twisted Star (Level 4)",
-            36 => "Ball Frenzy - Tic Tac Toe (Level 5)",
-            37 => "Ball Frenzy - Crazy Island (Level 6)",
-            38 => "Ball Frenzy - Sunshine (Level 7)",
-            39 => "Ball Frenzy - Gridlock (Level 8)",
-            40 => "Ball Frenzy - Rush Hour (Level 9)",
-            41 => "Ball Frenzy - Beam Me Up (Level 10)",
-        ],
-        "time_boards" => []
+        "names" => $names,
+        "time_boards" => [],
+        "column_names" => array_fill_keys(array_keys($names), "Score | Time")
     ],
     "formatter" => function($score, $boardId, $config, $info) {
         $score = (float)$score;
@@ -28,8 +38,13 @@ return [
         $m = floor(($ms % 3600000) / 60000);
         $s = floor(($ms % 60000) / 1000);
         $cc = floor(($ms % 1000) / 10);
+        $timeStr = sprintf("%02d:%02d:%02d.%02d", $h, $m, $s, $cc);
 
-        return sprintf("%d — %d:%02d:%02d:%02d", $points, $h, $m, $s, $cc);
+        return sprintf(
+            "%s | %s",
+            number_format($points, 0, ".", " "),
+            $timeStr
+        );
     }
 ];
 ?>

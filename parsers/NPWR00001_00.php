@@ -1,37 +1,33 @@
 <?php
+$time_boards = [
+    72,73,74,75,76,77,78,79,
+    128,129,130,131,132,133,134,135,
+    152,153,154,155,156,157,158,159
+];
+$tracks = [
+    "Rave City Riverfront" => 72,
+    "Lost Ruins"           => 128,
+    "Industrial Drive"     => 152,
+];
+$names = [];
+foreach ($tracks as $trackName => $startId) {
+    for ($i = 0; $i < 8; $i++) {
+        $currentId = $startId + $i;
+        $direction = ($i < 4) ? "Normal" : "Reverse";
+        $category = ($i % 4) + 1;
+        $names[$currentId] = "$trackName | Cat $category ($direction)";
+    }
+}
+
 return [
     "title" => "Ridge Racer 7",
     "config" => [
         "icon" => "",
         "game_id" => ["BCES00009", "BLUS30001"],
-        "time_boards"  => [72,73,74,75,76,77,78,79,128,129,130,131,132,133,134,135,152,153,154,155,156,157,158,159],
+        "time_boards"  => $time_boards,
         "score_boards" => [],
-        "names" => [
-            72 => "Rave City Riverfront (Single Time Attack, Machine Category 1, Normal)",
-            73 => "Rave City Riverfront (Single Time Attack, Machine Category 2, Normal)",
-            74 => "Rave City Riverfront (Single Time Attack, Machine Category 3, Normal)",
-            75 => "Rave City Riverfront (Single Time Attack, Machine Category 4, Normal)",
-            76 => "Rave City Riverfront (Single Time Attack, Machine Category 1, Reverse)",
-            77 => "Rave City Riverfront (Single Time Attack, Machine Category 2, Reverse)",
-            78 => "Rave City Riverfront (Single Time Attack, Machine Category 3, Reverse)",
-            79 => "Rave City Riverfront (Single Time Attack, Machine Category 4, Reverse)",
-            128 => "Lost Ruins (Single Time Attack, Machine Category 1, Normal)",
-            129 => "Lost Ruins (Single Time Attack, Machine Category 2, Normal)",
-            130 => "Lost Ruins (Single Time Attack, Machine Category 3, Normal)",
-            131 => "Lost Ruins (Single Time Attack, Machine Category 4, Normal)",
-            132 => "Lost Ruins (Single Time Attack, Machine Category 1, Reverse)",
-            133 => "Lost Ruins (Single Time Attack, Machine Category 2, Reverse)",
-            134 => "Lost Ruins (Single Time Attack, Machine Category 3, Reverse)",
-            135 => "Lost Ruins (Single Time Attack, Machine Category 4, Reverse)",
-            152 => "Industrial Drive (Single Time Attack, Machine Category 1, Normal)",
-            153 => "Industrial Drive (Single Time Attack, Machine Category 2, Normal)",
-            154 => "Industrial Drive (Single Time Attack, Machine Category 3, Normal)",
-            155 => "Industrial Drive (Single Time Attack, Machine Category 4, Normal)",
-            156 => "Industrial Drive (Single Time Attack, Machine Category 1, Reverse)",
-            157 => "Industrial Drive (Single Time Attack, Machine Category 2, Reverse)",
-            158 => "Industrial Drive (Single Time Attack, Machine Category 3, Reverse)",
-            159 => "Industrial Drive (Single Time Attack, Machine Category 4, Reverse)",
-        ]
+        "names" => $names,
+        "column_names" => "Time"
     ],
     "formatter" => function($score, $boardId, $config) {
         if (in_array($boardId, $config["time_boards"])) {
@@ -42,7 +38,7 @@ return [
             $min = floor($timeMs / 60000);
             $sec = floor(($timeMs % 60000) / 1000);
             $ms  = $timeMs % 1000;
-            
+
             return sprintf("%02d:%02d.%03d", $min, $sec, $ms);
         }
         return number_format($score, 0, ".", " ");
