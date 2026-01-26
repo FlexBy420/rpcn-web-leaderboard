@@ -5,7 +5,7 @@ $modes = [
     512 => ["name" => "Tricky", "count" => 20],
     768 => ["name" => "Tough",  "count" => 20]
 ];
-$customLevels = [];
+$customLevels = []; // for making board_id have specific title
 
 foreach ($modes as $startId => $modeData) {
     for ($i = 0; $i < $modeData["count"]; $i++) {
@@ -37,7 +37,7 @@ return [
         }
 
         return sprintf(
-            "%s - %s",
+            "%s|%s",
             $timeStr, $countryCode
         );
     }

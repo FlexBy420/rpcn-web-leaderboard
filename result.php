@@ -210,16 +210,21 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                     <table>
                         <thead>
                             <tr>
-                                <th style="width: 60px;">Rank</th><th>Player</th>
-                                <th>
-                                    <?php 
+                                <th style="width: 60px;">Rank</th>
+                                <th>Player</th>
+                                <?php 
+                                    $colDefinition = "Score";
                                     if (isset($pConfig['column_names'][$boardId])) {
-                                        echo htmlspecialchars($pConfig['column_names'][$boardId]);
-                                    } else {
-                                        echo $isTimeBoard ? "Time" : "Score";
+                                        $colDefinition = $pConfig['column_names'][$boardId];
+                                    } elseif (isset($pConfig['column_names']) && is_string($pConfig['column_names'])) {
+                                        $colDefinition = $pConfig['column_names'];
                                     }
-                                    ?>
-                                </th>
+
+                                    $cols = explode('|', $colDefinition);
+                                    foreach ($cols as $colName): 
+                                ?>
+                                    <th style="text-align: center;"><?php echo htmlspecialchars(trim($colName)); ?></th>
+                                <?php endforeach; ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -227,7 +232,12 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                             <tr>
                                 <td><?php echo $idx + 1; ?>.</td>
                                 <td><strong><?php echo htmlspecialchars($row["user"]); ?></strong></td>
-                                <td class="score-val"><?php echo $row["val"]; ?></td>
+                                <?php
+                                    $vals = explode('|', $row["val"]);
+                                    foreach ($vals as $v): 
+                                ?>
+                                    <td class="score-val" style="text-align: center;"><?php echo $v; ?></td>
+                                <?php endforeach; ?>
                             </tr>
                             <?php endforeach; ?>
                         </tbody>

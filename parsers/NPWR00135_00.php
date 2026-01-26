@@ -41,7 +41,7 @@ return [
         $timeStr = sprintf("%02d:%02d:%02d.%02d", $h, $m, $s, $cc);
 
         return sprintf(
-            "%s | %s",
+            "%s|%s",
             number_format($points, 0, ".", " "),
             $timeStr
         );
