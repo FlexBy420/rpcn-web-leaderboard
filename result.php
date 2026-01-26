@@ -108,8 +108,13 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
             foreach ($scoresToProcess as $row) {
                 if (!is_array($row) || !isset($parser['formatter']) || !is_callable($parser['formatter'])) continue;
 
-                $formattedValue = (string)$parser['formatter']($row["score"] ?? 0, $boardId, $pConfig, $row["info"] ?? null);
-                $sortValue = (float)($row["score"] ?? 0);
+                // don't display users with 0 score
+                $rawScore = (float)($row["score"] ?? 0);
+                if ($rawScore <= 0) {
+                    continue;
+                }
+                $formattedValue = (string)$parser['formatter']($rawScore, $boardId, $pConfig, $row["info"] ?? null);
+                $sortValue = $rawScore;
 
                 if ($isTimeBoard && strpos($formattedValue, ':') !== false) {
                     if (preg_match('/(\d+):(\d+)\.(\d+)/', $formattedValue, $matches)) {
