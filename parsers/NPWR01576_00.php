@@ -3,7 +3,7 @@ return [
     "title" => "Beyond Good & Evil HD",
     "config" => [
         "icon" => "",
-        "game_id" => "NPEB00435",
+        "game_id" => ["NPEB00435"],
         "score_boards" => [0],
         "names" => [
             0 => "Completion"
