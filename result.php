@@ -62,6 +62,7 @@ if ($errorMessage === null && is_array($parser)) {
 // fetch data from API
 if ($errorMessage === null && is_array($parser) && $boardId !== null) {
     $apiUrl = SCORE_API . urlencode($commIdStr) . "/" . $boardId;
+    $blacklist = file_exists('blacklist.php') ? include 'blacklist.php' : [];
 
     if (!is_dir($cacheDir)) { mkdir($cacheDir, 0777, true); }
     $cacheFile = $cacheDir . "/{$commIdStr}_{$boardId}.json";
@@ -107,10 +108,14 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
 
             foreach ($scoresToProcess as $row) {
                 if (!is_array($row) || !isset($parser['formatter']) || !is_callable($parser['formatter'])) continue;
-
+                // blacklist
+                $userName = is_string($row["online_name"] ?? null) ? $row["online_name"] : "Unknown";
+                if (in_array($userName, $blacklist)) {
+                    continue;
+                }
                 // don't display users with 0 score
                 $rawScore = (float)($row["score"] ?? 0);
-                if ($rawScore <= 0) {
+                if ($rawScore == 0) {
                     continue;
                 }
                 $formattedValue = (string)$parser['formatter']($rawScore, $boardId, $pConfig, $row["info"] ?? null);
