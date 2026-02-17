@@ -1,6 +1,29 @@
 <?php
 require_once 'config.php';
 
+// toxic filter
+function checkContentAndLog($userName, $comment, $commId, $boardId) {
+    $badWords = file_exists('badwords.php') ? include 'badwords.php' : [];
+    if (empty($badWords)) return false;
+
+    foreach ($badWords as $pattern) {
+        if (preg_match($pattern, $userName) || preg_match($pattern, $comment)) {
+            $logEntry = sprintf(
+                "[%s] AUTO-FILTER | User: %s | Game: %s | Board: %d | Match: %s | Comment: %s" . PHP_EOL,
+                date('Y-m-d H:i:s'),
+                $userName,
+                $commId,
+                $boardId,
+                $pattern,
+                $comment
+            );
+            file_put_contents('log/violation_log.txt', $logEntry, FILE_APPEND);
+            return true;
+        }
+    }
+    return false;
+}
+
 $errorMessage = null;
 $displayRows = [];
 $commId = $_GET["comm_id"] ?? null;
@@ -113,12 +136,20 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                 if (in_array($userName, $blacklist)) {
                     continue;
                 }
+
+                $comment = is_string($row["comment"] ?? null) ? $row["comment"] : "";
+
+                // filter toxic content
+                if (checkContentAndLog($userName, $comment, $commIdStr, $boardId)) {
+                    continue;
+                }
+
                 // don't display users with 0 score
                 $rawScore = (float)($row["score"] ?? 0);
                 if ($rawScore == 0) {
                     continue;
                 }
-                $formattedValue = (string)$parser['formatter']($rawScore, $boardId, $pConfig, $row["info"] ?? null);
+                $formattedValue = (string)$parser['formatter']($rawScore, $boardId, $pConfig, $row["info"] ?? null, $comment);
                 $sortValue = $rawScore;
 
                 if ($isTimeBoard && strpos($formattedValue, ':') !== false) {
