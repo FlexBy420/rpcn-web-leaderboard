@@ -9,13 +9,13 @@ function checkContentAndLog($userName, $comment, $commId, $boardId) {
     foreach ($badWords as $pattern) {
         if (preg_match($pattern, $userName) || preg_match($pattern, $comment)) {
             $logEntry = sprintf(
-                "[%s] AUTO-FILTER | User: %s | Game: %s | Board: %d | Match: %s | Comment: %s" . PHP_EOL,
+                "[%s] AUTO-FILTER | User: %s | Game: %s | Board: %d | Comment: %s | Match: %s" . PHP_EOL,
                 date('Y-m-d H:i:s'),
                 $userName,
                 $commId,
                 $boardId,
-                $pattern,
-                $comment
+                $comment,
+                $pattern
             );
             file_put_contents('log/violation_log.txt', $logEntry, FILE_APPEND);
             return true;
