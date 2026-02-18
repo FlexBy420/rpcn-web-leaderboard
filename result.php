@@ -3,7 +3,7 @@ require_once 'config.php';
 
 // toxic filter
 function checkContentAndLog($userName, $comment, $commId, $boardId) {
-    $badWords = file_exists('badwords.php') ? include 'badwords.php' : [];
+    $badWords = file_exists(BADWORDS_FILE) ? include BADWORDS_FILE : [];
     if (empty($badWords)) return false;
 
     foreach ($badWords as $pattern) {
@@ -17,7 +17,9 @@ function checkContentAndLog($userName, $comment, $commId, $boardId) {
                 $comment,
                 $pattern
             );
-            file_put_contents('log/violation_log.txt', $logEntry, FILE_APPEND);
+            $logDir = dirname(VIOLATION_LOG);
+            if (!is_dir($logDir)) { mkdir($logDir, 0777, true); }
+            file_put_contents(VIOLATION_LOG, $logEntry, FILE_APPEND);
             return true;
         }
     }
@@ -85,7 +87,7 @@ if ($errorMessage === null && is_array($parser)) {
 // fetch data from API
 if ($errorMessage === null && is_array($parser) && $boardId !== null) {
     $apiUrl = SCORE_API . urlencode($commIdStr) . "/" . $boardId;
-    $blacklist = file_exists('blacklist.php') ? include 'blacklist.php' : [];
+    $blacklist = file_exists(BLACKLIST_FILE) ? include BLACKLIST_FILE : [];
 
     if (!is_dir($cacheDir)) { mkdir($cacheDir, 0777, true); }
     $cacheFile = $cacheDir . "/{$commIdStr}_{$boardId}.json";
@@ -200,7 +202,7 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
 <body>
     <div class="container">
         <div class="header">
-            <?php 
+            <?php
                 $showBackToBoards = ($boardId !== null && count($names) > 1) || $errorMessage !== null;
                 $backUrl = $showBackToBoards ? "result.php?comm_id=" . urlencode($commIdStr) : "index.php";
             ?>
@@ -227,14 +229,14 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                     }
                 }
                 ?>
-            
+
                 <?php foreach ($groups as $groupName => $boards): ?>
                     <h3 style="color: #66fcf1; margin-top: 30px; border-bottom: 1px solid #45a29e; padding-bottom: 5px;">
                         <?php echo htmlspecialchars($groupName); ?>
                     </h3>
                     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 20px;">
                         <?php foreach ($boards as $id => $name): ?>
-                            <a href="?comm_id=<?php echo urlencode($commIdStr); ?>&board_id=<?php echo $id; ?>" 
+                            <a href="?comm_id=<?php echo urlencode($commIdStr); ?>&board_id=<?php echo $id; ?>"
                                style="display: block; padding: 10px; background: #1f2833; color: #c5c6c7; text-decoration: none; border-radius: 4px; text-align: center; transition: 0.3s;"
                                onmouseover="this.style.background='#45a29e'; this.style.color='#0b0c10';"
                                onmouseout="this.style.background='#1f2833'; this.style.color='#c5c6c7';">
@@ -253,16 +255,17 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                             <tr>
                                 <th style="width: 60px;">Rank</th>
                                 <th>Player</th>
-                                <?php 
+                                <?php
                                     $colDefinition = "Score";
-                                    if (isset($pConfig['column_names'][$boardId])) {
-                                        $colDefinition = $pConfig['column_names'][$boardId];
-                                    } elseif (isset($pConfig['column_names']) && is_string($pConfig['column_names'])) {
-                                        $colDefinition = $pConfig['column_names'];
-                                    }
+                                    $rawColumnNames = $pConfig['column_names'] ?? "Score";
 
+                                    if (is_array($rawColumnNames)) {
+                                        $colDefinition = $rawColumnNames[$boardId] ?? "Score";
+                                    } else {
+                                        $colDefinition = (string)$rawColumnNames;
+                                    }
                                     $cols = explode('|', $colDefinition);
-                                    foreach ($cols as $colName): 
+                                    foreach ($cols as $colName):
                                 ?>
                                     <th style="text-align: center;"><?php echo htmlspecialchars(trim($colName)); ?></th>
                                 <?php endforeach; ?>
@@ -275,7 +278,7 @@ if ($errorMessage === null && is_array($parser) && $boardId !== null) {
                                 <td><strong><?php echo htmlspecialchars($row["user"]); ?></strong></td>
                                 <?php
                                     $vals = explode('|', $row["val"]);
-                                    foreach ($vals as $v): 
+                                    foreach ($vals as $v):
                                 ?>
                                     <td class="score-val" style="text-align: center;"><?php echo $v; ?></td>
                                 <?php endforeach; ?>
