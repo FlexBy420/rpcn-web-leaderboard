@@ -23,8 +23,8 @@ return [
         }
 
         return sprintf(
-            "%s|%d", 
-            $points, 
+            "%s|%d",
+            $points,
             $ribbons
         );
     }

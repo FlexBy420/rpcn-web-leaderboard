@@ -8,7 +8,7 @@ $names = [
     6 => "Survival | Expert",
 ];
 
-$timeBoards = [1,2,3]; 
+$timeBoards = [1,2,3];
 $columnNames = [];
 foreach ($names as $id => $name) {
     $columnNames[$id] = in_array($id, $timeBoards) ? "Transmission | Time" : "Total Score";

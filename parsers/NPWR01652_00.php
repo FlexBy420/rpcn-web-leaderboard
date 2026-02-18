@@ -13,7 +13,7 @@ return [
     "config" => [
         "game_id" => ["NPEB00342", "NPJB00084"],
         "names" => $names,
-        "time_boards" => [0,1,2,3,4,5], 
+        "time_boards" => [0,1,2,3,4,5],
         "column_names" => $columnNames
     ],
     "formatter" => function($score, $boardId, $config, $info) {

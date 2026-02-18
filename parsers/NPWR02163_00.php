@@ -16,7 +16,7 @@ return [
     "formatter" => function($score, $boardId, $config, $info) {
         if ($boardId == 2) {
             $totalSeconds = (int)$score;
-            
+
             $days = floor($totalSeconds / 86400);
             $hours = floor(($totalSeconds % 86400) / 3600);
             $minutes = floor(($totalSeconds % 3600) / 60);

@@ -9,7 +9,7 @@ return [
     "config" => [
         "game_id" => ["NPUB30467"],
         "names" => $names,
-        "time_boards" => [1,2], 
+        "time_boards" => [1,2],
         "column_names" => $columnNames
     ],
     "formatter" => function($score, $boardId, $config, $info) {
