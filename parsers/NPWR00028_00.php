@@ -32,7 +32,7 @@ return [
 
         $countryCode = "??";
         if (!empty($info) && strlen($info) >= 4) {
-            $hexCountry = substr($info, -4); 
+            $hexCountry = substr($info, -4);
             $countryCode = strtoupper(pack("H*", $hexCountry));
         }
 

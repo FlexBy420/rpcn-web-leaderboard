@@ -46,7 +46,7 @@ return [
         // game id that use this comm id
         "game_id" => ["BLES00503", "BLES00827", "BLUS30279", "BLUS30515", "NPEB01156"],
         // Classification of boards: Combat challenges use scores, Predator challenges use time
-        "time_boards"  => $time_boards, 
+        "time_boards"  => $time_boards,
         "score_boards" => [0,2,4,6,8,10,12,14,16,18,20,22],
         // Mapping board IDs to their respective in-game challenge names
         "names" => $names
@@ -67,10 +67,10 @@ return [
             $min = floor($timeMs / 60000);
             $sec = floor(($timeMs % 60000) / 1000);
             $cs  = floor(($timeMs % 1000) / 10);
-            
+
             return sprintf("%02d:%02d.%02d", $min, $sec, $cs);
         }
-        
+
         // format score for combat challenges
         return number_format($score, 0, ".", " ");
     }
