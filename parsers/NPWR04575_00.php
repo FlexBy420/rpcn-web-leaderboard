@@ -105,7 +105,7 @@ $boardTypes = [
     'time_tag'      => range(27, 34),
     'survival_solo' => range(35, 42),
     'survival_tag'  => range(43, 50),
-    'char_points'   => range(53, 86),
+    'char_points'   => range(52, 86),
 ];
 
 $isType = function($id, $type) use ($boardTypes) {
